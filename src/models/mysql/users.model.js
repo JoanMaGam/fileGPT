@@ -1,5 +1,5 @@
 const db = require('../../config/db');
-const usersTableDB = 'filegpt.usuarios';
+const usersTableDB = 'filegpt.roles';
 
 
 const getAllUsers = async () => {
@@ -8,6 +8,17 @@ const getAllUsers = async () => {
         return allUsers;
     } catch (error) {
         throw { status: error?.status || 500, message: error?.message || error };
+    };
+};
+
+const createUser = async (newUser) => {
+    const { nombre, apellidos, email, password, rol_id } = newUser;
+    try {
+        const encryptedPassword = bcrypt.hashSync(password, 8);
+        const createdUser = await db.pool.query(`INSERT INTO ${usersTableDB} (nombre, apellidos, email, password, rol_id) VALUES (?, ?, ?, ?, ?)`, [nombre, apellidos, email, encryptedPassword, rol_id]);
+        return createdUser;
+    } catch (error) {
+        throw { status: 500, message: error?.message || error };
     };
 };
 
@@ -22,5 +33,6 @@ const insertLog = async (values) => {
 
 module.exports = {
     getAllUsers,
-    insertLog
+    insertLog,
+    createUser,
 }
