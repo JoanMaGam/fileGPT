@@ -41,4 +41,18 @@ const addTimeStamp = async (req, res, next) => {
     next();
 };
 
-module.exports = { checkToken, addTimeStamp };
+//Comprueba si el usuario tiene un rol determinado por parámetro (admin o user)
+const checkRol = (rol) => {
+    return (req, res, next) => {
+        const roles = { 1: "admin", 2: "user" };
+        const userRol = roles[req.user.rol_id];
+
+        if (userRol !== rol) {
+            return res.status(403).json({ fatal: `Debes ser ${rol}` });
+        }
+
+        next();
+    };
+};
+
+module.exports = { checkToken, addTimeStamp, checkRol };
