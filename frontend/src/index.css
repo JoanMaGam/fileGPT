@@ -7,17 +7,6 @@
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
-  /* Color base */
-  --mainColor: #fff;
-  /* Resalto de color base */
-  --lightColor: #f6f6f6;
-  /* Color principal de texto y fondo */
-  --textColor: #323e48;
-  /* Gris secundario */
-  --secondaryColor: #404f59;
-  /* Detalles importantes */
-  --highColor: #783086;
-
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
