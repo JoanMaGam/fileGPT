@@ -1,4 +1,4 @@
-const { createToken } = require('../helpers/utils');
+const { createToken, serverLogs } = require('../helpers/utils');
 const usersModel = require('../models/mysql/users.model');
 
 
@@ -71,6 +71,36 @@ const createUser = async (req, res) => {
 
 /**
  * 
+ * @brief Obtener un usuario por email de la BD
+ * @param {Object} email - Valores recibidos de un formulario en el frontend
+ * @returns {Object}  Usuario correspondiente al email solicitado - {status, data:usuario}
+ */
+const getUserByEmail = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        res.status(400).send({
+            status: "FAILED",
+            data: { error: "La clave 'email' no existe o está vacía en el cuerpo de la petición" },
+        });
+        return;
+    };
+
+    try {
+        const userByEmail = await usersModel.getUserByEmail(email);
+        await serverLogs(req, `Usuario con email "${email}" obtenido correctamente`);
+
+        res.send({ status: "OK", data: userByEmail });
+    } catch (error) {
+        await serverLogs(req, error?.message || error);
+        res
+            .status(error?.status || 500)
+            .send({ status: "FAILED", data: { error: error?.message || error } });
+    }
+}
+
+/**
+ * 
  * @brief Actualizar un usuario por email de la BD
  * @param {Object} req.body - 
  * @returns {Object} Confirmación de la operación
@@ -122,7 +152,7 @@ const deleteUserByEmail = async (req, res) => {
     try {
         await serverLogs(req, `Usuario con email "${email}" eliminado correctamente`);
 
-        await usersService.deleteUserByEmail(email);
+        await usersModel.deleteUserByEmail(email);
         res.send({ status: "OK", data: { msg: `Usuario con email "${email}" eliminado correctamente` } });
     } catch (error) {
         await serverLogs(req, error?.message || error);
@@ -157,7 +187,7 @@ const loginUser = async (req, res) => {
 
     try {
         //Recuperamos el usuario de la BD si existe
-        let userByEmail = await usersService.getUserByEmail(body.email);
+        let userByEmail = await usersModel.getUserByEmail(body.email);
 
         //Comprobamos si las password son iguales. 
         const iguales = bcrypt.compareSync(body.password, userByEmail.password);
@@ -213,6 +243,7 @@ const profile = async (req, res) => {
 module.exports = {
     getAllUsers,
     createUser,
+    getUserByEmail,
     updateUserByEmail,
     deleteUserByEmail,
     loginUser,

@@ -11,11 +11,10 @@ const pool = mysql.createPool(
     }
 ).promise();
 
-
 // Prueba de conexión al inicio
 pool.getConnection()
     .then(connection => {
-        console.log("✅ Conectado a la base de datos en Plesk");
+        console.log("✅ Conectado a la base de datos!");
         connection.release(); // Liberar conexión
     })
     .catch(err => {
