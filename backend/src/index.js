@@ -1,8 +1,10 @@
 const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
-const v1UsersRouter = require('./v1/routes/usersRoutes');
 const { addTimeStamp } = require("./helpers/middlewares");
+
+const v1UsersRouter = require('./v1/routes/usersRoutes');
+const v1QuestionsRouter = require('./v1/routes/questionsRoutes');
 
 const app = express();
 
@@ -15,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/api/v1/users', addTimeStamp, v1UsersRouter);
+app.use('/api/v1/questions', addTimeStamp, v1QuestionsRouter);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;

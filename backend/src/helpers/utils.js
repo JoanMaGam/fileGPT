@@ -10,7 +10,7 @@ const createToken = (user) => {
         user_password: user.password,
         user_rol: user.rol_id
     }
-    return jwt.sign(object, process.env.SECRET_KEY, { expiresIn: "2h" })
+    return jwt.sign(object, process.env.SECRET_KEY, { expiresIn: "1h" })
 };
 
 
@@ -29,7 +29,9 @@ const serverLogs = async (pReq, mensaje = '--') => {
     };
 
     try {
-        await usersModel.insertLog(values);
+        // await usersModel.insertLog(values);
+        console.log(line);
+
     } catch (error) {
         console.log(error);
         throw { status: 500, message: error?.message || error };

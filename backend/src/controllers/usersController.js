@@ -1,6 +1,6 @@
 const { createToken, serverLogs } = require('../helpers/utils');
 const usersModel = require('../models/mysql/users.model');
-
+const bcrypt = require('bcryptjs');
 
 /**
  * 
@@ -11,7 +11,8 @@ const getAllUsers = async (req, res) => {
     try {
         const allUsers = await usersModel.getAllUsers();
 
-        res.send({ status: "OK", data: allUsers });
+        await serverLogs(req, `Todos los usuarios obtenidos correctamente`);
+        res.status(200).send({ status: "OK", data: allUsers });
     } catch (error) {
         await serverLogs(req, error?.message || error);
         res
@@ -24,7 +25,7 @@ const getAllUsers = async (req, res) => {
  * 
  * @brief Crea/registra un usuario nuevo en la BD
  * @param {Object} req.body - Valores recibidos de un formulario en el frontend
- * @returns {Object}  Usuario creado - {status,data{datosInsercionBD}}  
+ * @returns {Object}  Confirmación de la operación
  */
 const createUser = async (req, res) => {
     const { body } = req;
@@ -58,8 +59,8 @@ const createUser = async (req, res) => {
     try {
         await serverLogs(req, `Usuario "${body.email}" creado correctamente`);
 
-        const createdUser = await usersModel.createUser(newUser);
-        res.send({ status: "OK", data: { msg: 'Usuario creado correctamente', createdUser } });
+        await usersModel.createUser(newUser);
+        res.status(200).send({ status: "OK", data: { msg: 'Usuario creado correctamente' } });
     } catch (error) {
         await serverLogs(req, error?.message || error);
 
@@ -77,6 +78,7 @@ const createUser = async (req, res) => {
  */
 const getUserByEmail = async (req, res) => {
     const { email } = req.body;
+    console.log(email);
 
     if (!email) {
         res.status(400).send({
@@ -87,10 +89,10 @@ const getUserByEmail = async (req, res) => {
     };
 
     try {
-        const userByEmail = await usersModel.getUserByEmail(email);
+        const [userByEmail] = await usersModel.getUserByEmail(email);
         await serverLogs(req, `Usuario con email "${email}" obtenido correctamente`);
 
-        res.send({ status: "OK", data: userByEmail });
+        res.status(200).send({ status: "OK", data: userByEmail });
     } catch (error) {
         await serverLogs(req, error?.message || error);
         res
@@ -123,7 +125,64 @@ const updateUserByEmail = async (req, res) => {
         await serverLogs(req, `Usuario con email "${userEmail}" actualizado correctamente`);
 
         await usersModel.updateUserByEmail(req.body);
-        res.send({ status: "OK", data: { msg: `Usuario con email "${userEmail}" actualizado correctamente` } });
+        res.status(200).send({ status: "OK", data: { msg: `Usuario con email "${userEmail}" actualizado correctamente` } });
+    } catch (error) {
+        await serverLogs(req, error?.message || error);
+        res
+            .status(error?.status || 500)
+            .send({ status: "FAILED", data: { error: error?.message || error } });
+    };
+};
+
+/**
+ * 
+ * @brief Actualizar la contraseña de un usuario por email de la BD
+ * @param {Object} req.body - 
+ * @returns {}  
+ */
+const updatePassword = async (req, res) => {
+    const { body } = req;
+
+    if (
+        !body.email ||
+        !body.password ||
+        !body.newPassword
+    ) {
+        res.status(400).send({
+            status: "FAILED",
+            data: {
+                error:
+                    "Alguna de las siguientes claves no existe o está vacía en el cuerpo de la petición: 'userEmail', 'password', 'newPassword'",
+            },
+        });
+        return;
+    };
+
+    try {
+        //Recuperamos el usuario de la BD si existe
+        let [userByEmail] = await usersModel.getUserByEmail(body.email);
+
+        //Comprobamos si las password son iguales. 
+        const iguales = bcrypt.compareSync(body.password, userByEmail.password);
+
+        //Si no son iguales devolvemos un error.
+        if (!iguales) {
+            await serverLogs(req, `Contraseña actual errónea al modificar la contraseña del usuario: ${body.email}`);
+            res.status(400).send({
+                status: "FAILED",
+                data: {
+                    error:
+                        "Contraseña errónea, introduzca su contraseña actual."
+                }
+            });
+            return;
+        };
+
+        //Si son iguales actualizamos la contraseña en la BD.
+        await usersModel.updatePassword(body);
+
+        await serverLogs(req, `Contraseña actualizada correctamente del usuario: ${body.email}`);
+        res.status(200).send({ status: "OK", data: { msg: `Contraseña actualizada correctamente` } });
     } catch (error) {
         await serverLogs(req, error?.message || error);
         res
@@ -149,17 +208,23 @@ const deleteUserByEmail = async (req, res) => {
         return;
     };
 
-    try {
-        await serverLogs(req, `Usuario con email "${email}" eliminado correctamente`);
+    //Protejo el usuario Root para que no pueda ser eliminado
+    if (email === 'root@filegpt.com') {
+        res.status(400).send({ status: "FAILED", data: { error: 'No puedes eliminar este usuario.' } });
+    } else {
+        if (email)
+            try {
+                await serverLogs(req, `Usuario con email "${email}" eliminado correctamente`);
 
-        await usersModel.deleteUserByEmail(email);
-        res.send({ status: "OK", data: { msg: `Usuario con email "${email}" eliminado correctamente` } });
-    } catch (error) {
-        await serverLogs(req, error?.message || error);
-        res
-            .status(error?.status || 500)
-            .send({ status: "FAILED", data: { error: error?.message || error } });
-    };
+                await usersModel.deleteUserByEmail(email);
+                res.status(200).send({ status: "OK", data: { msg: `Usuario con email "${email}" eliminado correctamente` } });
+            } catch (error) {
+                await serverLogs(req, error?.message || error);
+                res
+                    .status(error?.status || 500)
+                    .send({ status: "FAILED", data: { error: error?.message || error } });
+            };
+    }
 };
 
 /**
@@ -187,7 +252,7 @@ const loginUser = async (req, res) => {
 
     try {
         //Recuperamos el usuario de la BD si existe
-        let userByEmail = await usersModel.getUserByEmail(body.email);
+        let [userByEmail] = await usersModel.getUserByEmail(body.email);
 
         //Comprobamos si las password son iguales. 
         const iguales = bcrypt.compareSync(body.password, userByEmail.password);
@@ -207,7 +272,7 @@ const loginUser = async (req, res) => {
 
         //Si las password son iguales, creamos el token
         await serverLogs(req, `Login correcto de usuario: ${body.email}`);
-        res.json({
+        res.status(200).json({
             success: 'Login correcto',
             token: createToken(userByEmail)
         });
@@ -230,7 +295,7 @@ const profile = async (req, res) => {
     try {
         console.log(req.user);
 
-        res.json({ msg: 'PERFIL PRIVADO, (Acceso permitido con TOKEN)', user: req.user });
+        res.status(200).json({ msg: 'PERFIL PRIVADO, (Acceso permitido con TOKEN)', user: req.user });
     } catch (error) {
         await serverLogs(req, error?.message || error);
 
@@ -245,6 +310,7 @@ module.exports = {
     createUser,
     getUserByEmail,
     updateUserByEmail,
+    updatePassword,
     deleteUserByEmail,
     loginUser,
     profile

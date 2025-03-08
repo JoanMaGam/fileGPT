@@ -1,4 +1,5 @@
 const db = require('../../config/db');
+const bcrypt = require('bcryptjs');
 const usersTableDB = 'usuarios';
 const logsTableDB = 'server_logs';
 
@@ -25,8 +26,7 @@ const createUser = async (newUser) => {
     const { nombre, apellidos, email, password, rol_id } = newUser;
     try {
         const encryptedPassword = bcrypt.hashSync(password, 8);
-        const createdUser = await db.pool.query(`INSERT INTO ${usersTableDB} (nombre, apellidos, email, password, rol_id) VALUES (?, ?, ?, ?, ?)`, [nombre, apellidos, email, encryptedPassword, rol_id]);
-        return createdUser;
+        return await db.pool.query(`INSERT INTO ${usersTableDB} (nombre, apellidos, email, password, rol_id) VALUES (?, ?, ?, ?, ?)`, [nombre, apellidos, email, encryptedPassword, rol_id]);
     } catch (error) {
         throw { status: error?.status || 500, message: error?.message || error };
     };
@@ -56,6 +56,16 @@ const updateUserByEmail = async (values) => {
     };
 };
 
+const updatePassword = async (values) => {
+    const { userEmail, newPassword } = values;
+    const encryptedPassword = bcrypt.hashSync(newPassword, 8);
+    try {
+        return await db.pool.query(`UPDATE ${usersTableDB} SET usuarios.password= ? WHERE usuarios.email= ?;`, [encryptedPassword, userEmail]);
+    } catch (error) {
+        throw { status: 500, message: error?.message || error };
+    };
+};
+
 const deleteUserByEmail = async (email) => {
 
     try {
@@ -72,5 +82,6 @@ module.exports = {
     createUser,
     getUserByEmail,
     updateUserByEmail,
+    updatePassword,
     deleteUserByEmail
 }

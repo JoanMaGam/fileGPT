@@ -16,7 +16,8 @@ const checkToken = (req, res, next) => {
         console.log('verificando token');
         object = jwt.verify(token, process.env.SECRET_KEY);
     } catch (error) {
-        return res.json({ fatal: error.message });
+        // Enviamos código de estado 401 de "No autorizado por credenciales de autenticación"
+        return res.status(401).json({ fatal: error.message });
     }
 
     //Recupero los datos del usuario activo:
@@ -45,10 +46,10 @@ const addTimeStamp = async (req, res, next) => {
 const checkRol = (rol) => {
     return (req, res, next) => {
         const roles = { 1: "admin", 2: "user" };
-        const userRol = roles[req.user.rol_id];
+        const userRol = roles[req.user.user_rol];
 
         if (userRol !== rol) {
-            return res.status(403).json({ fatal: `Debes ser ${rol}` });
+            return res.status(403).json({ fatal: `Debes ser ${rol} para acceder a esta ruta` });
         }
 
         next();
