@@ -4,6 +4,7 @@ const cors = require("cors");
 const { addTimeStamp } = require("./helpers/middlewares");
 
 const v1UsersRouter = require('./v1/routes/usersRoutes');
+const v1DocumentsRouter = require('./v1/routes/documentsRoutes');
 const v1QuestionsRouter = require('./v1/routes/questionsRoutes');
 
 const app = express();
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/api/v1/users', addTimeStamp, v1UsersRouter);
+app.use('/api/v1/documents', addTimeStamp, v1DocumentsRouter);
 app.use('/api/v1/questions', addTimeStamp, v1QuestionsRouter);
 
 // Iniciar el servidor

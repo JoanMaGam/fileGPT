@@ -27,14 +27,14 @@ const getAllQuestions = async (req, res) => {
  * @returns {Object}  Mensaje de confirmación 
  */
 const insertQuestion = async (req, res) => {
-    const { body } = req;
+    const { usuario_id, documento_id, pregunta, respuesta } = req.body;
     console.log("controlador questions: ", body);
 
     if (
-        !body.usuario_id ||
-        !body.documento_id ||
-        !body.pregunta ||
-        !body.respuesta
+        !usuario_id ||
+        !documento_id ||
+        !pregunta ||
+        !respuesta
     ) {
         res.status(400).send({
             status: "FAILED",
@@ -49,7 +49,7 @@ const insertQuestion = async (req, res) => {
     try {
         await serverLogs(req, `Pregunta guardada correctamente`);
 
-        await questionsModel.insertQuestion(body);
+        await questionsModel.insertQuestion(req.body);
         res.status(200).send({ status: "OK", data: { msg: 'Pregunta guardada correctamente' } });
     } catch (error) {
         await serverLogs(req, error?.message || error);

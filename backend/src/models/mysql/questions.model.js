@@ -4,7 +4,7 @@ const questionsTableDB = 'preguntas';
 
 const getAllQuestions = async () => {
     try {
-        const allQuestions = await db.pool.query(`SELECT * FROM ${questionsTableDB}`);
+        const [allQuestions] = await db.pool.query(`SELECT * FROM ${questionsTableDB}`);
         return allQuestions;
     } catch (error) {
         throw { status: error?.status || 500, message: error?.message || error };
@@ -20,7 +20,7 @@ const getQuestionsByDocumentId = async (docId) => {
         if (!questions[0]) {
             throw {
                 status: 400,
-                message: `No se pudo encontrar el usuario con el email: '${email}'`
+                message: `No se pudo encontrar el documento con el id: '${docId}'`
             };
         };
         return questions;

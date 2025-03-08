@@ -6,7 +6,7 @@ const logsTableDB = 'server_logs';
 
 const getAllUsers = async () => {
     try {
-        const allUsers = await db.pool.query(`SELECT * FROM ${usersTableDB}`);
+        const [allUsers] = await db.pool.query(`SELECT * FROM ${usersTableDB}`);
         return allUsers;
     } catch (error) {
         throw { status: error?.status || 500, message: error?.message || error };
