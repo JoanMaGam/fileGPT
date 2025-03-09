@@ -28,7 +28,6 @@ const getAllQuestions = async (req, res) => {
  */
 const insertQuestion = async (req, res) => {
     const { usuario_id, documento_id, pregunta, respuesta } = req.body;
-    console.log("controlador questions: ", body);
 
     if (
         !usuario_id ||
@@ -62,25 +61,24 @@ const insertQuestion = async (req, res) => {
 
 /**
  * 
- * @brief Obtener las preguntas de un documento por id de documento de la BD
- * @param {Object} documento_id - Valores recibidos de un formulario en el frontend
- * @returns {Object}  Preguntas correspondientes al documento_id solicitado - {status, data:preguntas}
+ * @brief Obtener las preguntas de un usuario por id de usuario de la BD
+ * @param {Object} usuario_id - Valores recibidos de un formulario en el frontend
+ * @returns {Object}  Preguntas correspondientes al usuario_id solicitado - {status, data:preguntas}
  */
-const getQuestionsByDocumentId = async (req, res) => {
-    const { documento_id } = req.body;
-    console.log(documento_id);
+const getQuestionsByUserId = async (req, res) => {
+    const { usuario_id } = req.body;
 
-    if (!documento_id) {
+    if (!usuario_id) {
         res.status(400).send({
             status: "FAILED",
-            data: { error: "La clave 'documento_id' no existe o está vacía en el cuerpo de la petición" },
+            data: { error: "La clave 'usuario_id' no existe o está vacía en el cuerpo de la petición" },
         });
         return;
     };
 
     try {
-        const [questions] = await questionsModel.getQuestionsByDocumentId(documento_id);
-        await serverLogs(req, `Preguntas del documento con id "${documento_id}" obtenidas correctamente`);
+        const questions = await questionsModel.getQuestionsByUserId(usuario_id);
+        await serverLogs(req, `Preguntas del usuario con id "${usuario_id}" obtenidas correctamente`);
 
         res.status(200).send({ status: "OK", data: questions });
     } catch (error) {
@@ -91,7 +89,35 @@ const getQuestionsByDocumentId = async (req, res) => {
     }
 }
 
+/**
+ * 
+ * @brief Obtener las preguntas de un documento por id de documento de la BD
+ * @param {Object} documento_id - Valores recibidos de un formulario en el frontend
+ * @returns {Object}  Preguntas correspondientes al documento_id solicitado - {status, data:preguntas}
+ */
+const getQuestionsByDocumentId = async (req, res) => {
+    const { documento_id } = req.body;
 
+    if (!documento_id) {
+        res.status(400).send({
+            status: "FAILED",
+            data: { error: "La clave 'documento_id' no existe o está vacía en el cuerpo de la petición" },
+        });
+        return;
+    };
+
+    try {
+        const questions = await questionsModel.getQuestionsByDocumentId(documento_id);
+        await serverLogs(req, `Preguntas del documento con id "${documento_id}" obtenidas correctamente`);
+
+        res.status(200).send({ status: "OK", data: questions });
+    } catch (error) {
+        await serverLogs(req, error?.message || error);
+        res
+            .status(error?.status || 500)
+            .send({ status: "FAILED", data: { error: error?.message || error } });
+    }
+}
 
 /**
  * 
@@ -113,7 +139,7 @@ const deleteQuestionById = async (req, res) => {
     try {
         await serverLogs(req, `Pregunta con id "${id}" eliminada correctamente`);
 
-        await questionsModel.deleteQuestionById(email);
+        await questionsModel.deleteQuestionById(id);
         res.status(200).send({ status: "OK", data: { msg: `Pregunta eliminada correctamente` } });
     } catch (error) {
         await serverLogs(req, error?.message || error);
@@ -127,6 +153,7 @@ const deleteQuestionById = async (req, res) => {
 
 module.exports = {
     getAllQuestions,
+    getQuestionsByUserId,
     insertQuestion,
     getQuestionsByDocumentId,
     deleteQuestionById

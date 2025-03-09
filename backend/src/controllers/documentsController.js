@@ -28,7 +28,6 @@ const getAllDocuments = async (req, res) => {
  */
 const insertDocument = async (req, res) => {
     const { usuario_id, nombre_archivo } = req.body;
-    console.log("controlador documents: ", req.body);
 
     if (
         !usuario_id ||
@@ -65,6 +64,7 @@ const insertDocument = async (req, res) => {
  * @returns {Object}  Registros de documentos correspondientes al usuario_id solicitado - {status, data:documentos}
  */
 const getDocumentsByUserId = async (req, res) => {
+
     const { usuario_id } = req.body;
 
     if (!usuario_id) {
@@ -76,7 +76,7 @@ const getDocumentsByUserId = async (req, res) => {
     };
 
     try {
-        const [docRegisters] = await documentsModel.getDocumentsByUserId(usuario_id);
+        const docRegisters = await documentsModel.getDocumentsByUserId(usuario_id);
         await serverLogs(req, `Registros de documentos correspondientes al usuario con id "${usuario_id}" obtenidos correctamente`);
 
         res.status(200).send({ status: "OK", data: docRegisters });

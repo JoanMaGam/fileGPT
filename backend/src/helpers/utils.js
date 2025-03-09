@@ -18,7 +18,7 @@ const createToken = (user) => {
 const serverLogs = async (pReq, mensaje = '--') => {
 
     const line = `[${pReq.timeStamp}]  Método:'${pReq.method}'   URL:'${pReq.url}'   IP:'${pReq.headers.host}'   Mensaje:'${mensaje}'\n`;
-    console.log(line);
+    // console.log(line);
 
     let values = {
         timestamp: pReq.timeStamp,

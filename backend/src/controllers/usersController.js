@@ -29,7 +29,6 @@ const getAllUsers = async (req, res) => {
  */
 const createUser = async (req, res) => {
     const { body } = req;
-    console.log("controlador: ", body);
 
     if (
         !body.nombre ||
@@ -78,7 +77,6 @@ const createUser = async (req, res) => {
  */
 const getUserByEmail = async (req, res) => {
     const { email } = req.body;
-    console.log(email);
 
     if (!email) {
         res.status(400).send({
@@ -109,7 +107,6 @@ const getUserByEmail = async (req, res) => {
  */
 const updateUserByEmail = async (req, res) => {
     const { userEmail, nombre } = req.body;
-    console.log(req.body);
 
     if (!userEmail ||
         !nombre
@@ -293,8 +290,6 @@ const loginUser = async (req, res) => {
  */
 const profile = async (req, res) => {
     try {
-        console.log(req.user);
-
         res.status(200).json({ msg: 'PERFIL PRIVADO, (Acceso permitido con TOKEN)', user: req.user });
     } catch (error) {
         await serverLogs(req, error?.message || error);

@@ -1,5 +1,5 @@
 const db = require('../../config/db');
-const documentsTableDB = 'preguntas';
+const documentsTableDB = 'documentos';
 
 
 const getAllDocuments = async () => {
@@ -15,14 +15,6 @@ const getAllDocuments = async () => {
 const getDocumentsByUserId = async (userId) => {
     try {
         const [docRegisters] = await db.pool.query(`SELECT * FROM ${documentsTableDB} WHERE usuario_id  = ?`, [userId]);
-        console.log(docRegisters);
-
-        if (!docRegisters[0]) {
-            throw {
-                status: 400,
-                message: `No se pudo encontrar el usuario con el id: '${userId}'`
-            };
-        };
         return docRegisters;
     } catch (error) {
         throw { status: error?.status || 500, message: error?.message || error };

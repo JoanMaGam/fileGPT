@@ -11,11 +11,17 @@ const getAllQuestions = async () => {
     };
 };
 
-
+const getQuestionsByUserId = async (userId) => {
+    try {
+        const [questions] = await db.pool.query(`SELECT * FROM ${questionsTableDB} WHERE usuario_id  = ?`, [userId]);
+        return questions;
+    } catch (error) {
+        throw { status: error?.status || 500, message: error?.message || error };
+    };
+};
 const getQuestionsByDocumentId = async (docId) => {
     try {
         const [questions] = await db.pool.query(`SELECT * FROM ${questionsTableDB} WHERE documento_id  = ?`, [docId]);
-        console.log(questions);
 
         if (!questions[0]) {
             throw {
@@ -50,6 +56,7 @@ const deleteQuestionById = async (questionId) => {
 
 module.exports = {
     getAllQuestions,
+    getQuestionsByUserId,
     getQuestionsByDocumentId,
     insertQuestion,
     deleteQuestionById
