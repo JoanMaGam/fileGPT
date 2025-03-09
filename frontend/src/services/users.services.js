@@ -1,16 +1,7 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const baseUrl = 'http://localhost:3000/api/v1/users';
-
-const getUsers = async () => {
-    try {
-        const response = await axios.get(baseUrl);
-        return response;
-    } catch (error) {
-        console.error(error.message);
-        return error.response;
-    }
-}
 
 //Función que verifica si el usuario está logado
 const isLogged = () => {
@@ -31,8 +22,96 @@ const isAdmin = () => {
     }
 }
 
+const getUsers = async () => {
+    try {
+        const response = await axios.get(`${baseUrl}/users`);
+        return response;
+    } catch (error) {
+        console.error(error.message);
+        return error.response;
+    }
+}
+
+const registerUser = async (values) => {
+    try {
+        const response = await axios.post(`${baseUrl}/register`, values);
+        return response;
+    } catch (error) {
+        console.error(error.message);
+        return error.response;
+    }
+}
+
+const login = async (values) => {
+    try {
+        const response = await axios.post(`${baseUrl}/login`, values);
+        return response;
+    } catch (error) {
+        console.error(error.message);
+        return error.response;
+    }
+}
+
+const profile = async () => {
+    try {
+        const response = await axios.post(`${baseUrl}/profile`);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+}
+
+const getUserByEmail = async (userEmail) => {
+    try {
+        const response = await axios.post(`${baseUrl}/getUserByEmail`, userEmail);
+        return response;
+    } catch (error) {
+        console.error(error.message);
+        return error.response;
+    }
+}
+
+const updateUserByEmail = async (values) => {
+    try {
+        const response = await axios.put(`${baseUrl}/updateUserByEmail`, values);
+        return response;
+    } catch (error) {
+        console.error(error.message);
+        return error.response;
+    }
+}
+
+const updatePassword = async (values) => {
+    try {
+        const response = await axios.put(`${baseUrl}/updatePassword`, values);
+        return response;
+    } catch (error) {
+        console.error(error.message);
+        return error.response;
+    }
+}
+
+const deleteUserByEmail = async (userEmail) => {
+    try {
+        //Añado el objeto {data} para poder pasar los parámetros por el body. Propio de Axios.
+        const response = await axios.delete(`${baseUrl}/deleteUserByEmail`, { data: userEmail });
+        return response;
+    } catch (error) {
+        console.error(error.message);
+        return error.response;
+    }
+}
+
+
 export {
-    getUsers,
     isLogged,
-    isAdmin
+    isAdmin,
+    getUsers,
+    registerUser,
+    login,
+    profile,
+    getUserByEmail,
+    updateUserByEmail,
+    updatePassword,
+    deleteUserByEmail
 }

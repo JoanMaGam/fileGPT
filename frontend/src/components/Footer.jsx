@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
-        <Box component="footer" sx={{ mt: 4, py: 2, backgroundColor: "dodgerblue", color: "white", textAlign: "center" }}>
+        <Box component="footer" sx={{ py: 3, mt: 5, backgroundColor: "dodgerblue", color: "white", textAlign: "center" }}>
             <Container>
                 <Typography variant="body1">
                     &copy; {new Date().getFullYear()} FileGPT. Todos los derechos reservados.

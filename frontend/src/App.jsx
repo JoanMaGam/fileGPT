@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Outlet, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Typography } from '@mui/material';
 import Login from "./pages/Login";
@@ -12,20 +12,18 @@ import PoliticaDePrivacidad from './pages/legal/PoliticaDePrivacidad';
 import TerminosYCondiciones from './pages/legal/TerminosYCondiciones';
 import PoliticaDeCookies from './pages/legal/PoliticaDeCookies';
 import AvisoLegal from './pages/legal/AvisoLegal';
-import { isLogged, isAdmin } from './services/users.services';
+import { ProtectedAdminRoute } from './components/ProtectedAdminRoute';
+import AddUser from './pages/AddUser';
+import EditUser from './pages/EditUser';
+import DocumentsList from './pages/DocumentsList';
+import FileUpload from './components/FileUpload';
+import QuestionsList from './pages/QuestionsList';
 
 // Layout para la sección de administración
 const AdminLayout = () => {
-  if (!isLogged()) {
-    return <Navigate to="/login" replace />; // Redirige al login si no está logeado
-  }
-
-  if (!isAdmin()) {
-    return <Navigate to="/" replace />; // Si está logueado pero no es admin, redirige a home
-  }
-
   return (
     <>
+      <Typography variant="h3" sx={{ textAlign: 'center', p: 2 }}>Panel de Administración</Typography>
       <Outlet /> {/* Renderiza las subrutas de /admin */}
     </>
   );
@@ -50,17 +48,27 @@ function App() {
         {/* Rutas protegidas (usuarios autenticados) */}
         <Route element={<ProtectedRoute redirectPath='/login' />}>
           <Route path='/profile' element={<Profile />} />
+          <Route path='/file-upload' element={<FileUpload />} />
         </Route>
+
 
         {/* Backoffice  */}
         <Route path='/admin' element={<AdminLayout />}>
-          <Route index element={<Typography variant="h4">Panel de Administración</Typography>} />
-          <Route path='usersList' element={<UsersList />} />
-          {/* <Route path='usersList/:userID' element={<UserDetails />} /> */}
+          <Route index element={<Login />} />
+
+          {/* Rutas protegidas (usuario rol Administrador 'root') */}
+          <Route element={<ProtectedAdminRoute redirectPath='/login' />}>
+            <Route path='users' element={<UsersList />} />
+            <Route path='documents' element={<DocumentsList />} />
+            <Route path='questions' element={<QuestionsList />} />
+            <Route path='documents/add-file' element={<FileUpload />} />
+            <Route path='addUser' element={<AddUser />} />
+            <Route path='editUser' element={<EditUser />} />
+          </Route>
         </Route>
 
         {/* Página 404 */}
-        <Route path="*" element={<Typography variant='h2'>404 Not Found</Typography>} />
+        <Route path="*" element={<Typography variant='h2' sx={{ textAlign: 'center', p: 5 }}>404 Not Found</Typography>} />
       </Routes>
       <Footer />
     </BrowserRouter>

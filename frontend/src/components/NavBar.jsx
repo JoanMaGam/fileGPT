@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isAdmin, isLogged } from "../services/users.services";
 import logo from '../assets/img/inteligencia-artificial.png';
+import { lightBlue } from "@mui/material/colors";
 
 const NavBar = () => {
     const [role, setRole] = useState(2);
@@ -44,33 +45,46 @@ const NavBar = () => {
         setMobileOpen(!mobileOpen);
     };
 
-    // Contenido del menú (mismo para escritorio y móvil)
+    // Contenido del menú para pantallas grandes
     const menuItems = (
         <>
-            {!isAdmin() && (
-                <>
-                    <Button color="inherit" component={Link} to="/profile">
-                        Mi perfil
+            <Button color="inherit" component={Link} to="/">
+                Inicio
+            </Button>
+            {isAdmin() && (
+                <Box sx={{ p: 0.3, border: 2, borderRadius: 1 }}>
+                    <Button color="inherit" component={Link} to="/admin/users">
+                        Usuarios
                     </Button>
-                    <Button color="inherit" component={Link} to="/usersList">
-                        Lista de usuarios
+                    <Button color="inherit" component={Link} to="/admin/documents">
+                        Archivos
                     </Button>
-                </>
+                    <Button color="inherit" component={Link} to="/admin/questions">
+                        Preguntas
+                    </Button>
+                </Box>
             )}
-            {isLogged() ? (
-                <Button onClick={onLogout} sx={{ textAlign: 'center', bgcolor: 'lightgrey' }}>
-                    Cerrar Sesión
-                </Button>
-            ) : (
-                <>
-                    <Button color="inherit" component={Link} to="/register">
-                        Register
-                    </Button>
-                    <Button color="inherit" component={Link} to="/login">
-                        Login
-                    </Button>
-                </>
-            )}
+            {
+                isLogged() ? (
+                    <>
+                        <Button color="inherit" component={Link} to="/profile">
+                            Mi perfil
+                        </Button>
+                        <Button onClick={onLogout} sx={{ textAlign: 'center', bgcolor: 'lightgrey' }}>
+                            Cerrar Sesión
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Button color="inherit" component={Link} to="/register">
+                            Registro
+                        </Button>
+                        <Button color="inherit" component={Link} to="/login">
+                            Login
+                        </Button>
+                    </>
+                )
+            }
         </>
     );
 
@@ -84,7 +98,7 @@ const NavBar = () => {
                         component="img"
                         alt="logo"
                         src={logo}
-                        sx={{ width: { xs: 40, sm: 50 } }}
+                        sx={{ width: { xxs: 40, sm: 50 }, maxWidth: 50 }}
                     />
                     <Typography variant="h6" component={Link} to="/" sx={{ textDecoration: "none", color: "inherit", fontWeight: 'bold' }}>
                         FileGPT
@@ -92,12 +106,12 @@ const NavBar = () => {
                 </Box>
 
                 {/* Menú en pantallas grandes */}
-                <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+                <Box sx={{ display: { xxs: "none", md: "flex" }, gap: 2 }}>
                     {menuItems}
                 </Box>
 
                 {/* Icono de Menú en móviles */}
-                <IconButton color="inherit" edge="end" onClick={handleDrawerToggle} sx={{ display: { xs: "flex", md: "none" } }}>
+                <IconButton color="inherit" edge="end" onClick={handleDrawerToggle} sx={{ display: { xxs: "flex", md: "none" } }}>
                     <MenuIcon />
                 </IconButton>
             </Toolbar>
@@ -111,32 +125,50 @@ const NavBar = () => {
                     "& .MuiDrawer-paper": { width: 250 }
                 }}
             >
-                <List>
-                    {!isAdmin() && (
+                <List sx={{ color: 'darkblue', bgcolor: 'white' }}>
+                    <ListItem disablePadding>
+                        <ListItemButton component={Link} to="/" onClick={handleDrawerToggle}>
+                            <ListItemText primary="Inicio" />
+                        </ListItemButton>
+                    </ListItem>
+                    {isAdmin() && (
+                        <Box sx={{ p: 0.3, border: 2, borderRadius: 1 }}>
+                            <Typography sx={{ fontSize: 12, textAlign: 'center', backgroundColor: 'lightblue' }}>Opciones de administrador</Typography>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="/admin/users" onClick={handleDrawerToggle}>
+                                    <ListItemText primary="Usuarios" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="/admin/documents" onClick={handleDrawerToggle}>
+                                    <ListItemText primary="Archivos" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="/admin/documents" onClick={handleDrawerToggle}>
+                                    <ListItemText primary="Preguntas" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Box>
+                    )}
+                    {isLogged() ? (
                         <>
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="/profile" onClick={handleDrawerToggle}>
                                     <ListItemText primary="Mi perfil" />
                                 </ListItemButton>
                             </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton component={Link} to="/usersList" onClick={handleDrawerToggle}>
-                                    <ListItemText primary="Lista de usuarios" />
+                            <ListItem disablePadding sx={{ bgcolor: 'darkblue', color: 'white' }}>
+                                <ListItemButton onClick={() => { handleDrawerToggle(); onLogout(); }}>
+                                    <ListItemText primary="Cerrar Sesión" />
                                 </ListItemButton>
                             </ListItem>
                         </>
-                    )}
-                    {isLogged() ? (
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={() => { handleDrawerToggle(); onLogout(); }}>
-                                <ListItemText primary="Cerrar Sesión" />
-                            </ListItemButton>
-                        </ListItem>
                     ) : (
                         <>
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="/register" onClick={handleDrawerToggle}>
-                                    <ListItemText primary="Register" />
+                                    <ListItemText primary="Registro" />
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
@@ -148,7 +180,7 @@ const NavBar = () => {
                     )}
                 </List>
             </Drawer>
-        </AppBar>
+        </AppBar >
     );
 };
 
