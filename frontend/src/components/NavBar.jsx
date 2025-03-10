@@ -4,7 +4,6 @@ import { useDialogs } from "@toolpad/core";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isAdmin, isLogged } from "../services/users.services";
-import logo from '../assets/img/inteligencia-artificial.png';
 
 const NavBar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);  // Estado para el menú lateral
@@ -85,7 +84,7 @@ const NavBar = () => {
                     <Box
                         component="img"
                         alt="logo"
-                        src={logo}
+                        src="/inteligencia-artificial.png"
                         sx={{ width: { xxs: 40, sm: 50 }, maxWidth: 50 }}
                     />
                     <Typography variant="h6" component={Link} to="/" sx={{ textDecoration: "none", color: "inherit", fontWeight: 'bold' }}>

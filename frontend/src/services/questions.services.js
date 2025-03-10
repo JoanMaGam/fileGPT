@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const baseUrl = 'http://localhost:3000/api/v1/questions';
+// Obtengo la URL del backend desde el archivo .env
+const API_URL = import.meta.env.VITE_RENDER_API_URL;
+const baseUrl = `${API_URL}/api/v1/questions`;
+
 
 const getAllQuestions = async () => {
     try {

@@ -1,6 +1,7 @@
 import { Box, Button, Container, Typography } from "@mui/material"
 import { isLogged } from "../services/users.services"
 import { useNavigate } from "react-router-dom";
+import logo from '/logo.webp';
 
 const Home = () => {
 
@@ -68,7 +69,7 @@ const Home = () => {
                     </Typography>
                     <Box
                         component="img"
-                        src="/src/assets/img/logo.webp"
+                        src={logo}
                         alt="Imagen de transformación IA"
                         sx={{
                             width: { xxs: '80px', sm: '100px', md: '150px' },
