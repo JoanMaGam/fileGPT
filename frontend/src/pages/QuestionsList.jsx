@@ -122,7 +122,6 @@ const QuestionsList = () => {
                         display: "flex",
                         flexDirection: 'column',
                         alignItems: "baseline",
-                        minHeight: "100vh",
                         mt: { md: 1, xl: 5 }
                     }}>
                     <Box display='flex' justifyContent='space-between' width='100%'>
@@ -170,7 +169,6 @@ const QuestionsList = () => {
                         <Box display='flex' justifyContent='space-between' width='100%'>
                             <Typography variant='h3' sx={{ mb: 2 }}>Historial de preguntas</Typography>
                         </Box>
-                        {/* } */}
                         {areQuestions
                             ?
                             <TableContainer component={Paper}>

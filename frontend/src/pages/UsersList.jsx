@@ -94,7 +94,6 @@ const UsersList = () => {
                     display: "flex",
                     flexDirection: 'column',
                     alignItems: "baseline",
-                    minHeight: "100vh",
                     mt: { md: 1, xl: 5 }
                 }}>
                 <Box display='flex' justifyContent='space-between' width='100%'>

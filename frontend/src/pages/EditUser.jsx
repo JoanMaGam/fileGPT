@@ -95,7 +95,6 @@ const EditUser = () => {
                     width: '100%',
                     flexDirection: 'column',
                     alignItems: "baseline",
-                    minHeight: "100vh",
                     mt: { md: 0, xl: 5 }
                 }}>
                 <Link to={`../users`} >

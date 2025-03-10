@@ -1,31 +1,19 @@
 import { AppBar, Box, Button, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/MenuRounded";
 import { useDialogs } from "@toolpad/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isAdmin, isLogged } from "../services/users.services";
 import logo from '../assets/img/inteligencia-artificial.png';
-import { lightBlue } from "@mui/material/colors";
 
 const NavBar = () => {
-    const [role, setRole] = useState(2);
     const [mobileOpen, setMobileOpen] = useState(false);  // Estado para el menú lateral
+
+    // Hook de navegación
     const navigate = useNavigate();
 
     // Hook para los confirm
     const dialogs = useDialogs();
-
-    useEffect(() => {
-        // Recupero el rol del usuario logado y lo asigno al estado role. 
-        const getRole = async () => {
-            const response = await profile();
-            if (response.status !== 200) {
-                return enqueueSnackbar('Error al obtener el perfil de usuario:\n' + response.data.data.error, { variant: 'error' });
-            }
-            setRole(response.data.user.rol_id);
-        };
-        // getRole();
-    }, []);
 
     // Función que cierra la sesión del usuario
     const onLogout = async () => {
@@ -40,7 +28,7 @@ const NavBar = () => {
         };
     };
 
-    // Alternar el estado del menú lateral en móviles
+    // Función que alterna el estado del menú lateral en móviles y/o pantallas grandes
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };

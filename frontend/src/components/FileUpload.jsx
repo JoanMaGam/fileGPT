@@ -35,7 +35,7 @@ const FileUpload = () => {
                 display: "flex",
                 flexDirection: 'column',
                 alignItems: "center",
-                minHeight: "100vh",
+                // minHeight: "100vh",
                 mt: { md: 3, lg: 3, xl: 5 }
             }}>
             <Box
