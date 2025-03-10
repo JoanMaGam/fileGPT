@@ -68,7 +68,7 @@ const Home = () => {
                     </Typography>
                     <Box
                         component="img"
-                        src="/src/assets/img/logo.webp"
+                        src="/assets/img/logo.webp"
                         alt="Imagen de transformación IA"
                         sx={{
                             width: { xxs: '80px', sm: '100px', md: '150px' },
