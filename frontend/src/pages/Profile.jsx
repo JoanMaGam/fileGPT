@@ -50,7 +50,6 @@ const Profile = () => {
                 display: "flex",
                 flexDirection: 'column',
                 alignItems: "baseline",
-                minHeight: "100vh",
                 mt: { xs: 1, sm: 2, xl: 5 }
             }}>
                 <Typography variant='h2' sx={{ mb: 2 }}>Mi perfil</Typography>

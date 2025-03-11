@@ -2,16 +2,17 @@ import { Box, Button, Container, Stack, TextField, Typography } from "@mui/mater
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import { getUserByEmail, isLogged, profile } from "../services/users.services";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { insertDocument } from "../services/documents.services";
 import { useEffect, useState } from "react";
 
-const FileUpload = () => {
+const Questioner = () => {
 
+    const [answer, setAnswer] = useState("Respuesta de FileGPT sobre tu archivo subido...");
     const [user, setUser] = useState({});
 
     // Hook para el formulario
-    const { register, handleSubmit, formState, watch } = useForm();
+    const { register, handleSubmit, formState, watch, reset } = useForm();
     const { errors } = formState;
 
     // Hook de navegación
@@ -19,9 +20,6 @@ const FileUpload = () => {
 
     //Hook para los alert 
     const { enqueueSnackbar } = useSnackbar();
-
-    //Escucho los cambios del campo 'file' del formulario y obtengo el item
-    const file = watch("file");
 
     useEffect(() => {
         // Recupero el usuario de la BD y lo asigno al estado user. 
@@ -43,38 +41,29 @@ const FileUpload = () => {
 
     }, []);
 
-    const sendForm = async () => {
-        console.log('----', file[0].name);
-        console.log('----', file);
+    const sendForm = async (values) => {
+        console.log(values);
 
-        const formData = new FormData();
-        formData.append("file", file);
-
-        if (file) {
-            // try {
-            //     const response = await axios.post("https://tu-api.com/upload", formData, {
-            //         headers: { "Content-Type": "multipart/form-data" },
-            //     });
-            //     console.log("Archivo subido con éxito:", response.data);
-            // } catch (error) {
-            //     console.error("Error al subir el archivo", error);
-            // }
+        //Obtendo los datos del arhivo para pasarle el id a insert question
 
 
-            //Registro del nombre del archivo en la base de datos
-            const fileValues = { usuario_id: user.id, nombre_archivo: file[0].name }
+        // Llamo a la ruta insertQuestion
 
-            const response = await insertDocument(fileValues);
 
-            if (response.status !== 200) {
-                return enqueueSnackbar('Error al subir el archivo:\n' + response.data.data.error, { variant: 'error' });
-            }
 
-            enqueueSnackbar('Archivo subido con éxito', { variant: 'success' });
 
-            navigate('/questioner');
-        }
+        // Envio la pregunta al backend
+        // const response = await ask({ pregunta: values.question });
 
+        // if (response.status !== 200) {
+        //     return enqueueSnackbar('Error al procesar la pregunta:\n' + response.data.data.error, { variant: 'error' });
+        // }
+
+        reset();
+
+        // Respuesta del bot
+        // setAnswer(response.data.data)
+        setAnswer(values.question)
     };
 
     return (
@@ -100,32 +89,33 @@ const FileUpload = () => {
                 }}
             >
                 <Typography variant="h2" sx={{ my: 2, mb: 3 }
-                }> Sube tu Archivo</Typography >
-                <Box component="form" style={{ display: 'flex', flexDirection: 'column', gap: 15 }} onSubmit={handleSubmit(sendForm)}>
-                    <Stack direction="column" justifyContent={'space-between'} gap={4} my={3}>
+                }>Pregúntame algo sobre tu archivo</Typography >
+                <Box component="form" sx={{ display: 'flex', width: '90%', flexDirection: 'column', gap: 15 }} onSubmit={handleSubmit(sendForm)}>
+                    <Stack direction="row" justifyContent={'space-between'} display='flex' width='100%' gap={2} my={3}>
                         <TextField
-                            type='file'
-                            {...register("file", {
-                                required: "Selecciona un archivo"
+                            type='text'
+                            {...register("question", {
+                                required: "Haz una pregunta..."
                             })}
-                            error={!!errors.file}
-                            helperText={errors.file?.message}
-                            accept=".pdf,.doc,.txt" // Limito los archivos aceptados
-                            sx={{ minWidth: 100 }}
+                            error={!!errors.question}
+                            helperText={errors.question?.message}
+                            sx={{ width: '100%', minWidth: 100 }}
                         />
                         <Button
+                            sx={{ maxHeight: 55 }}
                             variant="contained"
-                            disabled={!file}
-                            sx={{ width: '100%', padding: '1rem' }}
                             type="submit">
-                            Subir Archivo
+                            Enviar
                         </Button>
                     </Stack>
                 </Box >
+                <Box sx={{ p: 3, backgroundColor: 'darkblue', borderRadius: 5, color: '#fff', width: '95%' }}>
+                    <Typography variant="body1" fontSize={18}>{answer}</Typography>
+                </Box>
             </Box>
         </Container>
 
     );
 };
 
-export default FileUpload;
+export default Questioner;

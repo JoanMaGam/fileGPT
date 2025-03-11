@@ -1,7 +1,10 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const baseUrl = 'http://localhost:3000/api/v1/users';
+// Obtengo la URL del backend desde el archivo .env
+const API_URL = import.meta.env.VITE_RENDER_API_URL;
+const baseUrl = `${API_URL}/api/v1/users`;
+
 
 //Función que verifica si el usuario está logado
 const isLogged = () => {

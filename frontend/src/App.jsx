@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute'
-import { Typography } from '@mui/material';
+import { Box, CssBaseline, Typography } from '@mui/material';
 import Login from "./pages/Login";
 import Home from './pages/Home';
 import NavBar from './components/NavBar';
@@ -18,6 +18,7 @@ import EditUser from './pages/EditUser';
 import DocumentsList from './pages/DocumentsList';
 import FileUpload from './components/FileUpload';
 import QuestionsList from './pages/QuestionsList';
+import Questioner from './components/Questioner';
 
 // Layout para la sección de administración
 const AdminLayout = () => {
@@ -32,45 +33,58 @@ const AdminLayout = () => {
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
+      <CssBaseline />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh"
+        }}
+      >
+        <Box sx={{ flexGrow: 1 }}>
+          {/* Barra del Menú de Navegación */}
+          <NavBar />
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path='/' element={<Home />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
 
-        {/* Rutas legales */}
-        <Route path='/aviso-legal' element={<AvisoLegal />} />
-        <Route path='/politica-de-privacidad' element={<PoliticaDePrivacidad />} />
-        <Route path='/terminos-y-condiciones' element={<TerminosYCondiciones />} />
-        <Route path='/politica-de-cookies' element={<PoliticaDeCookies />} />
+            {/* Rutas legales */}
+            <Route path='/aviso-legal' element={<AvisoLegal />} />
+            <Route path='/politica-de-privacidad' element={<PoliticaDePrivacidad />} />
+            <Route path='/terminos-y-condiciones' element={<TerminosYCondiciones />} />
+            <Route path='/politica-de-cookies' element={<PoliticaDeCookies />} />
 
-        {/* Rutas protegidas (usuarios autenticados) */}
-        <Route element={<ProtectedRoute redirectPath='/login' />}>
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/file-upload' element={<FileUpload />} />
-        </Route>
+            {/* Rutas protegidas (usuarios autenticados) */}
+            <Route element={<ProtectedRoute redirectPath='/login' />}>
+              <Route path='/profile' element={<Profile />} />
+              <Route path='/file-upload' element={<FileUpload />} />
+              <Route path='/questioner' element={<Questioner />} />
+            </Route>
 
+            {/* Backoffice  */}
+            <Route path='/admin' element={<AdminLayout />}>
+              <Route index element={<Login />} />
 
-        {/* Backoffice  */}
-        <Route path='/admin' element={<AdminLayout />}>
-          <Route index element={<Login />} />
+              {/* Rutas protegidas (usuario rol Administrador 'root') */}
+              <Route element={<ProtectedAdminRoute redirectPath='/login' />}>
+                <Route path='users' element={<UsersList />} />
+                <Route path='documents' element={<DocumentsList />} />
+                <Route path='questions' element={<QuestionsList />} />
+                <Route path='documents/add-file' element={<FileUpload />} />
+                <Route path='addUser' element={<AddUser />} />
+                <Route path='editUser' element={<EditUser />} />
+              </Route>
+            </Route>
 
-          {/* Rutas protegidas (usuario rol Administrador 'root') */}
-          <Route element={<ProtectedAdminRoute redirectPath='/login' />}>
-            <Route path='users' element={<UsersList />} />
-            <Route path='documents' element={<DocumentsList />} />
-            <Route path='questions' element={<QuestionsList />} />
-            <Route path='documents/add-file' element={<FileUpload />} />
-            <Route path='addUser' element={<AddUser />} />
-            <Route path='editUser' element={<EditUser />} />
-          </Route>
-        </Route>
-
-        {/* Página 404 */}
-        <Route path="*" element={<Typography variant='h2' sx={{ textAlign: 'center', p: 5 }}>404 Not Found</Typography>} />
-      </Routes>
-      <Footer />
+            {/* Página 404 */}
+            <Route path="*" element={<Typography variant='h2' sx={{ textAlign: 'center', p: 5 }}>404 Not Found</Typography>} />
+          </Routes>
+        </Box>
+        {/* Pie de Página */}
+        <Footer />
+      </Box>
     </BrowserRouter>
   );
 }
