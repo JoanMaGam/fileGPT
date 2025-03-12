@@ -1,17 +1,17 @@
-// const { OpenAIApi } = require('openai');
+const { OpenAI } = require('openai');
 const { Pinecone } = require('@pinecone-database/pinecone');
 
-// const openai = new OpenAIApi({
-//     apiKey: process.env.OPENAI_API_KEY,
-//     // modelName: 'text-embedding-3-small'
-// });
+// Configuramos Openai con el token de 'OPENAI_API_KEY'
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
 
-
+// Configuramos Pinecone con los tokens de 'PINECONE_API_KEY' y 'PINECONE_INDEX'
 const pinecone = new Pinecone({
     apiKey: process.env.PINECONE_API_KEY,
-    // environment: process.env.PINECONE_ENVIRONMENT,
 });
 
 const index = pinecone.Index(process.env.PINECONE_INDEX);
 
-module.exports = { /* openai, */ index };
+
+module.exports = { openai, pinecone, index };
