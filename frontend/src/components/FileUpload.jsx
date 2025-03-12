@@ -5,6 +5,7 @@ import { getUserByEmail, isLogged, profile } from "../services/users.services";
 import { useNavigate } from "react-router-dom";
 import { insertDocument } from "../services/documents.services";
 import { useEffect, useState } from "react";
+import { uploadDoc } from "../services/ai.services";
 
 const FileUpload = () => {
 
@@ -44,29 +45,34 @@ const FileUpload = () => {
     }, []);
 
     const sendForm = async () => {
-        console.log('----', file[0].name);
-        console.log('----', file);
 
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", file[0]);
+        console.log(formData);
 
         if (file) {
-            // try {
-            //     const response = await axios.post("https://tu-api.com/upload", formData, {
-            //         headers: { "Content-Type": "multipart/form-data" },
-            //     });
-            //     console.log("Archivo subido con éxito:", response.data);
-            // } catch (error) {
-            //     console.error("Error al subir el archivo", error);
-            // }
+            try {
+                // Enviamos el archivo al backend para guardarlo en la base de datos vectorial
+                const response2 = await uploadDoc(formData);
+                console.log(response2);
+
+                if (response2.status !== 200) {
+                    return enqueueSnackbar('Error al subir el archivo:\n' + response2.data.error.message, { variant: 'error' });
+                }
+                console.log("Archivo subido con éxito:", response2.data.message);
 
 
-            //Registro del nombre del archivo en la base de datos
-            const fileValues = { usuario_id: user.id, nombre_archivo: file[0].name }
+                //Registro del nombre del archivo en la base de datos
+                const fileValues = { usuario_id: user.id, nombre_archivo: file[0].name }
 
-            const response = await insertDocument(fileValues);
+                const response = await insertDocument(fileValues);
 
-            if (response.status !== 200) {
+                if (response.status !== 200) {
+                    return enqueueSnackbar('Error al subir el archivo:\n' + response.data.data.error, { variant: 'error' });
+                }
+
+            } catch (error) {
+                // return console.error("Error al subir el archivo", error);
                 return enqueueSnackbar('Error al subir el archivo:\n' + response.data.data.error, { variant: 'error' });
             }
 
@@ -110,7 +116,7 @@ const FileUpload = () => {
                             })}
                             error={!!errors.file}
                             helperText={errors.file?.message}
-                            accept=".pdf,.doc,.txt" // Limito los archivos aceptados
+                            accept=".pdf" // Limito los archivos aceptados
                             sx={{ minWidth: 100 }}
                         />
                         <Button
