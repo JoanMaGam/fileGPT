@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 
 // Comprueba si existe el token en las cabeceras
 const checkToken = (req, res, next) => {
-    console.log('Pasa por el Middleware');
-
     //Comprovar si la cabecera de Authorization existe:
     if (!req.headers['authorization']) {
         return res.json({ fatal: 'Debes incluir la cabecera de Authorization' });
@@ -13,7 +11,6 @@ const checkToken = (req, res, next) => {
     //Comprovar si el token es correcto:
     let object;
     try {
-        console.log('verificando token');
         object = jwt.verify(token, process.env.SECRET_KEY);
     } catch (error) {
         // Enviamos código de estado 401 de "No autorizado por credenciales de autenticación"
