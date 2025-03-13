@@ -23,21 +23,22 @@ const getAllDocuments = async (req, res) => {
 /**
  * 
  * @brief Inserta un nuevo registro de documento en la BD
- * @param {Object} req.body - usuario_id, nombre_archivo. Valores recibidos de un formulario en el frontend
+ * @param {Object} req.body - usuario_id, nombre_archivo, size(tamaño). Valores recibidos de un formulario en el frontend
  * @returns {Object}  Mensaje de confirmación 
  */
 const insertDocument = async (req, res) => {
-    const { usuario_id, nombre_archivo } = req.body;
+    const { usuario_id, nombre_archivo, size } = req.body;
 
     if (
         !usuario_id ||
-        !nombre_archivo
+        !nombre_archivo ||
+        !size
     ) {
         res.status(400).send({
             status: "FAILED",
             data: {
                 error:
-                    "Alguna de las siguientes claves no existe o está vacía en el cuerpo de la petición: 'usuario_id', 'nombre_archivo'",
+                    "Alguna de las siguientes claves no existe o está vacía en el cuerpo de la petición: 'usuario_id', 'nombre_archivo', 'size'",
             },
         });
         return;

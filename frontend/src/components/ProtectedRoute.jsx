@@ -17,24 +17,21 @@ const ProtectedRoute = ({ redirectPath }) => {
         const getProfile = async () => {
             try {
                 const response = await profile();
-                // En caso de estado 401, elimino el token del localStorage y redirijo al usuario
-                if (response.status === 401) {
+                // En caso de estado diferente a 200, elimino el token del localStorage y redirijo al usuario
+                if (response.status !== 200) {
                     localStorage.removeItem('userLogged_token')
                     navigate(redirectPath)
                     return enqueueSnackbar('Sesión expirada. Vuelve a iniciar sesión.', { variant: 'warning' });
-                }
-                if (response.status !== 200) {
-                    return enqueueSnackbar('Error al obtener el perfil de usuario:\n' + response.data.fatal || 'Error desconocido', { variant: 'error' });
                 }
                 return;
             } catch (error) {
                 // En caso de estado 401, elimino el token del localStorage y redirijo al usuario
-                if (error.response?.status == 401) {
+                if (error.response?.status === 401) {
                     localStorage.removeItem('userLogged_token')
                     navigate(redirectPath)
                     return enqueueSnackbar('Sesión expirada. Vuelve a iniciar sesión.', { variant: 'warning' });
                 } else {
-                    return enqueueSnackbar('Error al obtener el perfil de usuario.', { variant: 'error' });
+                    return enqueueSnackbar('Error al obtener el perfil de usuario.❇️', { variant: 'error' });
                 }
             }
         }

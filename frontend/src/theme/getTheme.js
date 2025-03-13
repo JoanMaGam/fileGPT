@@ -28,6 +28,7 @@ export const getTheme = () => {
                 xs: 300,
                 sm: 600,
                 md: 900,
+                bg: 1000,
                 lg: 1200,
                 xl: 1536,
             },

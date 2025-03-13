@@ -18,7 +18,7 @@ const EditUser = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     // Hooks para formulario
-    const { register, handleSubmit, reset, formState, setValue, watch } = useForm({
+    const { register, handleSubmit, reset, formState, watch } = useForm({
         defaultValues: { rol_id: "" } // Asegura que el valor inicial sea vacío o un valor específico
     });
     const { errors } = formState;
@@ -26,12 +26,10 @@ const EditUser = () => {
     // Hook de navegación
     const navigate = useNavigate();
 
-
     // Escucha cambios del valor del select
     const selectedRole = watch("rol_id");
 
     useEffect(() => {
-
         //Si existe 'usuario' el editUser carga los datos del usuario seleccionado en userList
         if (usuario) {
             setUser(usuario)
@@ -42,7 +40,6 @@ const EditUser = () => {
             // Reseteo el formulario con los nuevos valores, sin afectar 'password'
             reset(restOfValues);
         }
-
     }, []);
 
     const sendForm = async (values) => {

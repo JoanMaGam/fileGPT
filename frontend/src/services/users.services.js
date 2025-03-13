@@ -30,7 +30,6 @@ const getUsers = async () => {
         const response = await axios.get(`${baseUrl}/users`);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -40,7 +39,6 @@ const registerUser = async (values) => {
         const response = await axios.post(`${baseUrl}/register`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -50,7 +48,6 @@ const login = async (values) => {
         const response = await axios.post(`${baseUrl}/login`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -69,7 +66,6 @@ const getUserByEmail = async (userEmail) => {
         const response = await axios.post(`${baseUrl}/getUserByEmail`, userEmail);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -79,7 +75,6 @@ const updateUserByEmail = async (values) => {
         const response = await axios.put(`${baseUrl}/updateUserByEmail`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -89,7 +84,6 @@ const updatePassword = async (values) => {
         const response = await axios.put(`${baseUrl}/updatePassword`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -100,7 +94,6 @@ const deleteUserByEmail = async (userEmail) => {
         const response = await axios.delete(`${baseUrl}/deleteUserByEmail`, { data: userEmail });
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }

@@ -6,6 +6,7 @@ const { addTimeStamp } = require("./helpers/middlewares");
 const v1UsersRouter = require('./v1/routes/usersRoutes');
 const v1DocumentsRouter = require('./v1/routes/documentsRoutes');
 const v1QuestionsRouter = require('./v1/routes/questionsRoutes');
+const v1AiRouter = require('./v1/routes/aiRoutes');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 app.use('/api/v1/users', addTimeStamp, v1UsersRouter);
 app.use('/api/v1/documents', addTimeStamp, v1DocumentsRouter);
 app.use('/api/v1/questions', addTimeStamp, v1QuestionsRouter);
+app.use('/api/v1/ai', addTimeStamp, v1AiRouter);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;

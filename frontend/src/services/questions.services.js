@@ -10,7 +10,6 @@ const getAllQuestions = async () => {
         const response = await axios.get(`${baseUrl}/questions`);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -20,7 +19,6 @@ const insertQuestion = async (values) => {
         const response = await axios.post(`${baseUrl}/insertQuestion`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -30,7 +28,6 @@ const getQuestionsByUserId = async (values) => {
         const response = await axios.post(`${baseUrl}/getQuestionsByUserId`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -40,7 +37,6 @@ const getQuestionsByDocumentId = async (values) => {
         const response = await axios.post(`${baseUrl}/getQuestionsByDocumentId`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -51,7 +47,6 @@ const deleteQuestionById = async (values) => {
         const response = await axios.delete(`${baseUrl}/deleteQuestionById`, { data: values });
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }

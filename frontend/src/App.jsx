@@ -18,6 +18,7 @@ import EditUser from './pages/EditUser';
 import DocumentsList from './pages/DocumentsList';
 import FileUpload from './components/FileUpload';
 import QuestionsList from './pages/QuestionsList';
+import Questioner from './components/Questioner';
 
 // Layout para la sección de administración
 const AdminLayout = () => {
@@ -59,6 +60,7 @@ function App() {
             <Route element={<ProtectedRoute redirectPath='/login' />}>
               <Route path='/profile' element={<Profile />} />
               <Route path='/file-upload' element={<FileUpload />} />
+              <Route path='/questioner' element={<Questioner />} />
             </Route>
 
             {/* Backoffice  */}

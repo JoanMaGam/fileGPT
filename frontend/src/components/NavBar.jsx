@@ -54,6 +54,12 @@ const NavBar = () => {
             {
                 isLogged() ? (
                     <>
+                        <Button color="inherit" component={Link} to="/questioner">
+                            Preguntar
+                        </Button>
+                        <Button color="inherit" component={Link} to="/file-upload">
+                            Subir Archivo
+                        </Button>
                         <Button color="inherit" component={Link} to="/profile">
                             Mi perfil
                         </Button>
@@ -77,7 +83,7 @@ const NavBar = () => {
 
     return (
         <AppBar position="static">
-            <Toolbar sx={{ display: "flex", justifyContent: "space-between", backgroundColor: 'deepskyblue' }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "space-between", backgroundColor: 'deepskyblue', padding: { xs: "6px 12px", md: "8px 16px" } }}>
 
                 {/* Logo y Nombre */}
                 <Box display="flex" alignItems="center" gap={2}>
@@ -93,12 +99,12 @@ const NavBar = () => {
                 </Box>
 
                 {/* Menú en pantallas grandes */}
-                <Box sx={{ display: { xxs: "none", md: "flex" }, gap: 2 }}>
+                <Box sx={{ display: { xxs: "none", bg: "flex" }, gap: 1 }}>
                     {menuItems}
                 </Box>
 
                 {/* Icono de Menú en móviles */}
-                <IconButton color="inherit" edge="end" onClick={handleDrawerToggle} sx={{ display: { xxs: "flex", md: "none" } }}>
+                <IconButton color="inherit" edge="end" onClick={handleDrawerToggle} sx={{ display: { xxs: "flex", bg: "none" } }}>
                     <MenuIcon />
                 </IconButton>
             </Toolbar>
@@ -132,7 +138,7 @@ const NavBar = () => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton component={Link} to="/admin/documents" onClick={handleDrawerToggle}>
+                                <ListItemButton component={Link} to="/admin/questions" onClick={handleDrawerToggle}>
                                     <ListItemText primary="Preguntas" />
                                 </ListItemButton>
                             </ListItem>
@@ -140,6 +146,16 @@ const NavBar = () => {
                     )}
                     {isLogged() ? (
                         <>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="/questioner" onClick={handleDrawerToggle}>
+                                    <ListItemText primary="Preguntar" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="/file-upload" onClick={handleDrawerToggle}>
+                                    <ListItemText primary="Subir Archivo" />
+                                </ListItemButton>
+                            </ListItem>
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="/profile" onClick={handleDrawerToggle}>
                                     <ListItemText primary="Mi perfil" />

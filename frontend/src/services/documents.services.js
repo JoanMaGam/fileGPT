@@ -10,7 +10,6 @@ const getAllDocuments = async () => {
         const response = await axios.get(`${baseUrl}/documents`);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -20,7 +19,6 @@ const insertDocument = async (values) => {
         const response = await axios.post(`${baseUrl}/insertDocument`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -30,7 +28,6 @@ const getDocumentsByUserId = async (values) => {
         const response = await axios.post(`${baseUrl}/getDocumentsByUserId`, values);
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
@@ -41,7 +38,6 @@ const deleteDocumentById = async (values) => {
         const response = await axios.delete(`${baseUrl}/deleteDocumentById`, { data: values });
         return response;
     } catch (error) {
-        console.error(error.message);
         return error.response;
     }
 }
