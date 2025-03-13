@@ -70,7 +70,8 @@ const Questioner = () => {
         setLoading(true);
 
         if (!fileUploaded) {
-            return enqueueSnackbar('Debes subir un archivo primero', { variant: 'warning' })
+            enqueueSnackbar('Debes subir un archivo primero', { variant: 'warning' })
+            return setLoading(false);
         }
 
         try {
