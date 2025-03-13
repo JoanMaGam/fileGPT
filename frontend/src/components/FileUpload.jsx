@@ -56,7 +56,7 @@ const FileUpload = () => {
                 const response2 = await uploadDoc(formData);
 
                 if (response2.status !== 200) {
-                    enqueueSnackbar('Error al subir el archivo:\n' + response2.data.message, { variant: 'error' });
+                    enqueueSnackbar('Error al subir el archivo1:\n' + response2.data.message, { variant: 'error' });
                     return setLoading(false);
                 }
 
@@ -67,7 +67,7 @@ const FileUpload = () => {
                 const response = await insertDocument(fileValues);
 
                 if (response.status !== 200) {
-                    enqueueSnackbar('Error al subir el archivo:\n' + response.data.data.error, { variant: 'error' });
+                    enqueueSnackbar('Error al subir el archivo2:\n' + response.data.error, { variant: 'error' });
                     return setLoading(false);
                 }
 
@@ -77,7 +77,7 @@ const FileUpload = () => {
                 //Redirijo al usuario a /questioner pasándole el archivo
                 navigate('/questioner', { state: { fileUploaded: file[0] } });
             } catch (error) {
-                enqueueSnackbar(response.data.data.error ? 'Error al subir el archivo:\n' + (response.data.data.error) : 'Error al subir el archivo:\n' + (response2.data?.data?.error || "Error interno"), { variant: 'error' });
+                enqueueSnackbar(response.data.error ? 'Error al subir el archivo3:\n' + (response.data.error) : 'Error al subir el archivo4:\n' + (response2.data?.error || "Error interno"), { variant: 'error' });
                 return setLoading(false);
             }
         }
