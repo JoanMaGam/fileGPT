@@ -27,19 +27,18 @@ const getAllQuestions = async (req, res) => {
  * @returns {Object}  Mensaje de confirmación 
  */
 const insertQuestion = async (req, res) => {
-    const { usuario_id, documento_id, pregunta, respuesta } = req.body;
+    const { usuario_id, documento_id, pregunta } = req.body;
 
     if (
         !usuario_id ||
         !documento_id ||
-        !pregunta ||
-        !respuesta
+        !pregunta
     ) {
         res.status(400).send({
             status: "FAILED",
             data: {
                 error:
-                    "Alguna de las siguientes claves no existe o está vacía en el cuerpo de la petición: 'usuario_id', 'documento_id', 'pregunta', 'respuesta'",
+                    "Alguna de las siguientes claves no existe o está vacía en el cuerpo de la petición: 'usuario_id', 'documento_id', 'pregunta'",
             },
         });
         return;

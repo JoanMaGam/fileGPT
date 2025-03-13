@@ -18,7 +18,7 @@ const createToken = (user) => {
 const serverLogs = async (pReq, mensaje = '--') => {
 
     const line = `[${pReq.timeStamp}]  Método:'${pReq.method}'   URL:'${pReq.url}'   IP:'${pReq.headers.host}'   Mensaje:'${mensaje}'\n`;
-    // console.log(line);
+    console.log(line);
 
     let values = {
         timestamp: pReq.timeStamp,
@@ -29,11 +29,9 @@ const serverLogs = async (pReq, mensaje = '--') => {
     };
 
     try {
-        // await usersModel.insertLog(values);
-        console.log(line);
+        await usersModel.insertLog(values);
 
     } catch (error) {
-        console.log(error);
         throw { status: 500, message: error?.message || error };
     };
 };

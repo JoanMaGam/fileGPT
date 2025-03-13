@@ -22,9 +22,9 @@ const getDocumentsByUserId = async (userId) => {
 };
 
 const insertDocument = async (newDocument) => {
-    const { usuario_id, nombre_archivo } = newDocument;
+    const { usuario_id, nombre_archivo, size } = newDocument;
     try {
-        return await db.pool.query(`INSERT INTO ${documentsTableDB} (usuario_id, nombre_archivo) VALUES (?, ?)`, [usuario_id, nombre_archivo]);
+        return await db.pool.query(`INSERT INTO ${documentsTableDB} (usuario_id, nombre_archivo, size) VALUES (?, ?, ?)`, [usuario_id, nombre_archivo, size]);
     } catch (error) {
         throw { status: error?.status || 500, message: error?.message || error };
     };

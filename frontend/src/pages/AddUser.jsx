@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom';
-import { profile, registerUser } from '../services/users.services';
+import { registerUser } from '../services/users.services';
 import { Box, Button, Container, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
@@ -27,7 +27,6 @@ const AddUser = () => {
     const toggleI = () => { return toggleInput === 'text' ? (setToggleInput('password'), setToggleIcon(<RemoveRedEyeOutlinedIcon />)) : (setToggleInput('text'), setToggleIcon(<VisibilityOffOutlinedIcon />)) }
 
     const sendForm = async (values) => {
-
         //Registro del usuario en la BD
         const response = await registerUser(values);
 

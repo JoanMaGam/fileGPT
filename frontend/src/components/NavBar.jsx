@@ -54,6 +54,9 @@ const NavBar = () => {
             {
                 isLogged() ? (
                     <>
+                        <Button color="inherit" component={Link} to="/questioner">
+                            Preguntar
+                        </Button>
                         <Button color="inherit" component={Link} to="/file-upload">
                             Subir Archivo
                         </Button>
@@ -135,7 +138,7 @@ const NavBar = () => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton component={Link} to="/admin/documents" onClick={handleDrawerToggle}>
+                                <ListItemButton component={Link} to="/admin/questions" onClick={handleDrawerToggle}>
                                     <ListItemText primary="Preguntas" />
                                 </ListItemButton>
                             </ListItem>
@@ -143,6 +146,11 @@ const NavBar = () => {
                     )}
                     {isLogged() ? (
                         <>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="/questioner" onClick={handleDrawerToggle}>
+                                    <ListItemText primary="Preguntar" />
+                                </ListItemButton>
+                            </ListItem>
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="/file-upload" onClick={handleDrawerToggle}>
                                     <ListItemText primary="Subir Archivo" />

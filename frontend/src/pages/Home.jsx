@@ -2,6 +2,7 @@ import { Box, Button, Container, Typography } from "@mui/material"
 import { isLogged } from "../services/users.services"
 import { useNavigate } from "react-router-dom";
 import logo from './../../public/logo.webp';
+
 const Home = () => {
 
     // Hook de navegación
