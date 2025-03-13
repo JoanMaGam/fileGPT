@@ -36,9 +36,9 @@ const getQuestionsByDocumentId = async (docId) => {
 };
 
 const insertQuestion = async (newQuestion) => {
-    const { usuario_id, documento_id, pregunta, respuesta } = newQuestion;
+    const { usuario_id, documento_id, pregunta } = newQuestion;
     try {
-        return await db.pool.query(`INSERT INTO ${questionsTableDB} (usuario_id, documento_id, pregunta, respuesta) VALUES (?, ?, ?, ?)`, [usuario_id, documento_id, pregunta, respuesta]);
+        return await db.pool.query(`INSERT INTO ${questionsTableDB} (usuario_id, documento_id, pregunta) VALUES (?, ?, ?)`, [usuario_id, documento_id, pregunta]);
     } catch (error) {
         throw { status: error?.status || 500, message: error?.message || error };
     };
