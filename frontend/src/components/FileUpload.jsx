@@ -1,4 +1,4 @@
-import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, TextField, Typography, CircularProgress } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import { getUserByEmail, isLogged, profile } from "../services/users.services";
@@ -10,6 +10,7 @@ import { uploadDoc } from "../services/ai.services";
 const FileUpload = () => {
 
     const [user, setUser] = useState({});
+    const [loading, setLoading] = useState(false);
 
     // Hook para el formulario
     const { register, handleSubmit, formState, watch } = useForm();
@@ -45,40 +46,40 @@ const FileUpload = () => {
     }, []);
 
     const sendForm = async () => {
-
+        setLoading(true);
         const formData = new FormData();
         formData.append("file", file[0]);
-        console.log(formData);
 
         if (file) {
             try {
                 // Enviamos el archivo al backend para guardarlo en la base de datos vectorial
                 const response2 = await uploadDoc(formData);
-                console.log(response2);
 
                 if (response2.status !== 200) {
-                    return enqueueSnackbar('Error al subir el archivo:\n' + response2.data.error.message, { variant: 'error' });
+                    enqueueSnackbar('Error al subir el archivo:\n' + response2.data.message, { variant: 'error' });
+                    return setLoading(false);
                 }
-                console.log("Archivo subido con éxito:", response2.data.message);
 
 
                 //Registro del nombre del archivo en la base de datos
-                const fileValues = { usuario_id: user.id, nombre_archivo: file[0].name }
+                const fileValues = { usuario_id: user.id, nombre_archivo: file[0].name, size: parseInt(file[0].size) }
 
                 const response = await insertDocument(fileValues);
 
                 if (response.status !== 200) {
-                    return enqueueSnackbar('Error al subir el archivo:\n' + response.data.data.error, { variant: 'error' });
+                    enqueueSnackbar('Error al subir el archivo:\n' + response.data.data.error, { variant: 'error' });
+                    return setLoading(false);
                 }
 
+                enqueueSnackbar('Archivo subido con éxito', { variant: 'success' });
+                setLoading(false);
+
+                //Redirijo al usuario a /questioner pasándole el archivo
+                navigate('/questioner', { state: { fileUploaded: file[0] } });
             } catch (error) {
-                // return console.error("Error al subir el archivo", error);
-                return enqueueSnackbar('Error al subir el archivo:\n' + response.data.data.error, { variant: 'error' });
+                enqueueSnackbar(response.data.data.error ? 'Error al subir el archivo:\n' + (response.data.data.error) : 'Error al subir el archivo:\n' + (response2.data?.data?.error || "Error interno"), { variant: 'error' });
+                return setLoading(false);
             }
-
-            enqueueSnackbar('Archivo subido con éxito', { variant: 'success' });
-
-            navigate('/questioner');
         }
 
     };
@@ -121,11 +122,13 @@ const FileUpload = () => {
                         />
                         <Button
                             variant="contained"
-                            disabled={!file}
+                            disabled={!file || loading} //Deshabilito el botón mientras no haya archivo o cuando esté cargando
                             sx={{ width: '100%', padding: '1rem' }}
                             type="submit">
-                            Subir Archivo
+                            {loading ? <CircularProgress size={24} sx={{ color: "darkblue" }} /> : "Subir Archivo"}
                         </Button>
+                        {loading &&
+                            <Typography variant="h6">Se está subiendo el archivo, gracias por tu paciencia 😊</Typography>}
                     </Stack>
                 </Box >
             </Box>

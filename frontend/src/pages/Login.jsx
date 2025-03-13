@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Paper, Stack, TextField, Typography, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { isAdmin, login } from '../services/users.services';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
@@ -11,6 +11,7 @@ const Login = () => {
 
     const [toggleInput, setToggleInput] = useState('password');
     const [toggleIcon, setToggleIcon] = useState(<RemoveRedEyeOutlinedIcon />);
+    const [loading, setLoading] = useState(false); // Estado para el spinner
 
     // Hooks para formulario y errores
     const { register, handleSubmit, formState } = useForm();
@@ -31,22 +32,22 @@ const Login = () => {
 
 
     const sendForm = async (values) => {
+        setLoading(true); // Activamos el loader
         const response = await login(values);
 
         //En función de la respuesta del login, muestro el error, guardo el token en el localStorage y muestro login correcto
         if (response.status !== 200) {
-            return enqueueSnackbar('Error al iniciar sesión:\n' + response.data.data.error, { variant: 'error' });
+            enqueueSnackbar('Error al iniciar sesión:\n' + response.data.data.error, { variant: 'error' });
+            return setLoading(false); // Desactivamos el loader
         }
 
         localStorage.setItem('userLogged_token', response.data.token);
 
         if (response.data.token) {
             enqueueSnackbar('Login correcto!', { variant: 'success' });
+            setLoading(false); // Desactivamos el loader
 
-            if (isAdmin()) {
-                return navigate('/admin/users');
-            }
-            return navigate('/');
+            return navigate(isAdmin() ? '/admin/users' : '/');
         }
     }
 
@@ -119,8 +120,10 @@ const Login = () => {
                             <Button
                                 variant='outlined'
                                 sx={{ width: '100%', padding: '1rem', fontWeight: 'bold' }}
-                                type="submit">
-                                {isLoginRoute ? "Iniciar Sesión" : "Acceder al panel"}
+                                type="submit"
+                                disabled={loading} // Deshabilita el botón mientras carga 
+                            >
+                                {loading ? <CircularProgress size={24} sx={{ color: "darkblue" }} /> : isLoginRoute ? "Iniciar Sesión" : "Acceder al panel"}
                             </Button>
                         </Box>
                         {isLoginRoute &&
